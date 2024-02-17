@@ -45,7 +45,6 @@ function PokemonCard({ pokemon }: Props) {
     if (id && pokemonData) {
       navigation.navigate('Pokemon Item', {
         id,
-        name: toCapitalize(pokemonData.name),
       });
     }
   };
@@ -61,11 +60,7 @@ function PokemonCard({ pokemon }: Props) {
         />
       </View>
 
-      <Text style={styles.text}>
-        {toCapitalize(pokemon.name)}
-
-        {id}
-      </Text>
+      <Text style={styles.text}>{toCapitalize(pokemon.name)}</Text>
     </TouchableOpacity>
   );
 }
