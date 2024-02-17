@@ -1,41 +1,21 @@
 import { useEffect, useState } from 'react';
 
 import { Layout, Text } from '@ui-kitten/components';
+import { PokeAPI } from 'pokeapi-types';
 import { Image, StyleSheet, View } from 'react-native';
 
 // API
-import {
-  getPokemon,
-  getPokemonEggGroup,
-  getPokemonEvolution,
-  getPokemonSpecies,
-} from 'api/pokemon';
+import { PokemonItemScreenProps } from 'navigation/types';
 
-// Components
-import Chip from 'components/Chip';
-
-// Constants
-import { POKEMON_TYPE_ICONS } from 'constants/pokemonTypeIcon';
+import { getPokemon, getPokemonSpecies } from 'api/pokemon';
 
 // Utils
-import {
-  extractPokemonEvolution,
-  extractPokemonGenera,
-  extractPokemonMoves,
-  extractPokemonStats,
-  extractPokemonTypes,
-  extractIdFromUrl,
-  getPokemonImage,
-} from 'utils/pokemon';
-import { consoleLogStringsToJson, toCapitalize } from 'utils/strings';
+import { getPokemonImage } from 'utils/pokemon';
+import { toCapitalize } from 'utils/strings';
 
-const PokemonItemScreen = ({ navigation, route }) => {
+const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
   // State
-  const [pokemon, setPokemon] = useState({ name: '' });
-  const [generaName, setGeneraName] = useState('');
-  const [types, setTypes] = useState([]);
-  const [species, setSpecies] = useState({});
-  const [stats, setStats] = useState([]);
+  const [pokemon, setPokemon] = useState<PokeAPI.Pokemon | undefined>(undefined);
   const [color, setColor] = useState('');
 
   // Navigation
@@ -47,21 +27,13 @@ const PokemonItemScreen = ({ navigation, route }) => {
     const fetchPokemon = async () => {
       try {
         const pokemonData = await getPokemon(id);
-        const { data: pokemonSpecies } = await getPokemonSpecies(id);
-        const pokemonChainId = extractIdFromUrl(pokemonSpecies.evolution_chain.url);
-        const { data: PokemonChain } = await getPokemonEvolution(pokemonChainId);
-        extractPokemonEvolution(PokemonChain);
-
         setPokemon(pokemonData);
-        setTypes(extractPokemonTypes(pokemonData));
-        consoleLogStringsToJson(pokemonData);
-        setSpecies(pokemonSpecies);
-        // consoleLogStringsToJson(PokemonChain);
-        setStats(extractPokemonStats(pokemonData));
-        setGeneraName(extractPokemonGenera(pokemonSpecies));
+
+        const pokemonSpecies = await getPokemonSpecies(id);
+
         setColor(pokemonSpecies.color.name);
       } catch (error) {
-        setPokemon({});
+        setPokemon(undefined);
         console.error('error', error);
       }
     };
@@ -90,36 +62,16 @@ const PokemonItemScreen = ({ navigation, route }) => {
           />
         </View>
 
-        {/* <Text category="h1" style={styles.text}>
+        <Text category="h1" style={styles.text}>
           {toCapitalize(pokemon.name)}
-        </Text> */}
+        </Text>
       </View>
 
       {/* Main */}
       <View style={styles.main}>
-        {/* PokemonTypes */}
-        <View style={styles.pokemonTypesContainer}>
-          {types.map((typeName, index) => (
-            <Chip
-              color={POKEMON_TYPE_ICONS[typeName].color}
-              icon={POKEMON_TYPE_ICONS[typeName].icon}
-              key={typeName}
-              style={{
-                marginRight: index !== types.length && 8,
-              }}
-              text={toCapitalize(typeName)}
-              variant="outlined"
-            />
-          ))}
-        </View>
-
         {/* Info */}
         <View style={styles.pokemonInfoContainer}>
           <View style={styles.pokemonInfo}>
-            <Text category="h4" style={[styles.text, styles.pokemonInfoValue, { color }]}>
-              {generaName}
-            </Text>
-
             <Text category="label" style={styles.text}>
               Species
             </Text>
@@ -166,24 +118,6 @@ const PokemonItemScreen = ({ navigation, route }) => {
           <Text category="h3" style={[styles.text, { color, marginBottom: 12 }]}>
             Base Stats
           </Text>
-
-          <View style={styles.pokemonStatsContainer}>
-            <View style={[styles.pokemonStatsContainer__Left, { borderColor: color }]}>
-              {stats.map((stat) => (
-                <View key={stat.name} style={styles.stats}>
-                  <Text style={[styles.text, { color }]}>{stat.name.toUpperCase()}</Text>
-                </View>
-              ))}
-            </View>
-
-            <View>
-              {stats.map((stat) => (
-                <View key={stat.name} style={styles.stats}>
-                  <Text style={[styles.text, { color }]}>{stat.value}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
         </View>
       </View>
     </Layout>
@@ -214,24 +148,8 @@ const styles = StyleSheet.create({
   pokemonInfo: { flexGrow: 1 },
   pokemonInfoValue: { fontWeight: 'bold' },
 
-  // Types
-  pokemonTypesContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 24,
-  },
-
   // Evoltuon
   pokemonEvolutionContainer: {},
-
-  // Stats
-  pokemonStatsContainer: { flexDirection: 'row' },
-  pokemonStatsContainer__Left: {
-    borderRightWidth: 1,
-    paddingRight: 24,
-    marginRight: 24,
-  },
-  stats: { alignItems: 'flex-start', marginBottom: 6 },
 
   text: { textAlign: 'center' },
 });
