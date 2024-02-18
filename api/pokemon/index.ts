@@ -2,7 +2,6 @@ import axios from 'axios';
 import { PokeAPI } from 'pokeapi-types';
 
 export const getAllPokemon = async (params: object) => {
-  console.log('params', params);
   try {
     const { data } = await axios.get<PokeAPI.NamedAPIResourceList>(
       'https://pokeapi.co/api/v2/pokemon',
@@ -122,11 +121,14 @@ export const getPokemonForms = async (id: string) => {
 // Species
 export const getAllPokemonSpecies = async (params: object) => {
   try {
-    const response = await axios.get('https://pokeapi.co/api/v2/pokemon-species', {
-      params: { ...params },
-    });
+    const { data } = await axios.get<PokeAPI.PokemonSpecies>(
+      'https://pokeapi.co/api/v2/pokemon-species',
+      {
+        params: { ...params },
+      },
+    );
 
-    return response;
+    return data;
   } catch (error) {
     console.error('error', error);
   }
@@ -134,9 +136,11 @@ export const getAllPokemonSpecies = async (params: object) => {
 
 export const getPokemonSpecies = async (id: string) => {
   try {
-    const response = await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+    const { data } = await axios.get<PokeAPI.PokemonSpecies>(
+      `https://pokeapi.co/api/v2/pokemon-species/${id}`,
+    );
 
-    return response;
+    return data;
   } catch (error) {
     console.error('error', error);
   }
