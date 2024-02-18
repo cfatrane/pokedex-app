@@ -15,7 +15,7 @@ const { Navigator, Screen } = createNativeStackNavigator();
 
 type RootStackParamList = {
   'Pokemon List': undefined;
-  'Pokemon Item': { id: string; name: string };
+  'Pokemon Item': { id: string };
 };
 
 export type PokemonListScreenProps = NativeStackScreenProps<RootStackParamList, 'Pokemon List'>;
