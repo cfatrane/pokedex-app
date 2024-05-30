@@ -1,16 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { Layout } from '@ui-kitten/components';
-import PokemonCard from 'components/PokemonCard';
-import { PokeAPI } from 'pokeapi-types';
-import { FlatList, StyleSheet } from 'react-native';
+import { Layout } from "@ui-kitten/components";
+import PokemonCard from "components/PokemonCard";
+import { PokeAPI } from "pokeapi-types";
+import { FlatList, StyleSheet, View } from "react-native";
 
-import { getAllPokemon } from 'api/pokemon';
+import { getAllPokemon } from "api/pokemon";
 
 const LIMIT = 10;
 
 const PokemonListScreen = () => {
-  const [pokemonList, setPokemonList] = useState<PokeAPI.NamedAPIResource[]>([]);
+  const [pokemonList, setPokemonList] = useState<PokeAPI.NamedAPIResource[]>(
+    [],
+  );
   const [offset, setOffset] = useState(0);
 
   const fetchAllPokemon = async () => {
@@ -23,7 +25,7 @@ const PokemonListScreen = () => {
       }
     } catch (error) {
       setPokemonList([]);
-      console.error('error', error);
+      console.error("error", error);
     }
   };
 
@@ -32,19 +34,19 @@ const PokemonListScreen = () => {
   }, []);
 
   return (
-    <Layout level="4" style={styles.container}>
-      {pokemonList.length > 0 && (
+    <View style={styles.container}>
+      {/* {pokemonList.length > 0 && (
         <FlatList
           columnWrapperStyle={{
-            justifyContent: 'space-around',
+            justifyContent: "space-around",
           }}
           data={pokemonList}
           numColumns={2}
           onEndReached={() => fetchAllPokemon()}
           renderItem={({ item }) => <PokemonCard pokemon={item} />}
         />
-      )}
-    </Layout>
+      )} */}
+    </View>
   );
 };
 

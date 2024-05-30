@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { useNavigation } from '@react-navigation/native';
-import { PokeAPI } from 'pokeapi-types';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { PokeAPI } from "pokeapi-types";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { PokemonItemScreenNavigationProps } from '@/navigation';
+import { PokemonItemScreenNavigationProps } from "@/navigation";
 
-import { extractIdFromUrl, getPokemonImage } from '@/utils/pokemon';
-import { toCapitalize } from '@/utils/strings';
+import { extractIdFromUrl, getPokemonImage } from "@/utils/pokemon";
+import { toCapitalize } from "@/utils/strings";
 
-import { getPokemon } from '@/api/pokemon';
+import { getPokemon } from "@/api/pokemon";
 
 type Props = { pokemon: PokeAPI.NamedAPIResource };
 
 function PokemonCard({ pokemon }: Props) {
   // State
-  const [pokemonData, setPokemonData] = useState<PokeAPI.Pokemon | undefined>(undefined);
+  const [pokemonData, setPokemonData] = useState<PokeAPI.Pokemon | undefined>(
+    undefined,
+  );
 
   // Navigation
   const navigation = useNavigation<PokemonItemScreenNavigationProps>();
 
   const id = extractIdFromUrl(pokemon.url);
-  const pokemonImageUrl = getPokemonImage(id!, 'other-home-front_default');
+  const pokemonImageUrl = getPokemonImage(id!, "other-home-front_default");
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -31,7 +33,7 @@ function PokemonCard({ pokemon }: Props) {
         setPokemonData(data);
       } catch (error) {
         setPokemonData(undefined);
-        console.error('error', error);
+        console.error("error", error);
       }
     };
 
@@ -41,7 +43,7 @@ function PokemonCard({ pokemon }: Props) {
   // On Event
   const onPressCard = () => {
     if (id && pokemonData) {
-      navigation.navigate('Pokemon Item', {
+      navigation.navigate("Pokemon Item", {
         id,
       });
     }
@@ -49,7 +51,7 @@ function PokemonCard({ pokemon }: Props) {
 
   return (
     <TouchableOpacity onPress={() => onPressCard()} style={styles.container}>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Image
           source={{
             uri: pokemonImageUrl,
@@ -65,7 +67,7 @@ function PokemonCard({ pokemon }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
     marginBottom: 30,
     padding: 10,
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
   img: { width: 100, height: 100 },
 
   text: {
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 

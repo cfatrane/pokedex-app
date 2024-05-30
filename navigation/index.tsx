@@ -1,27 +1,30 @@
-import React from 'react';
+import React from "react";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import PokemonItemScreen from '@/screens/PokemonItemScreen';
-import PokemonListScreen from '@/screens/PokemonListScreen';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import type {
   NativeStackScreenProps,
   NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+} from "@react-navigation/native-stack";
+
+import PokemonItemScreen from "@/app/PokemonItemScreen";
+import PokemonListScreen from "@/app/pokemons";
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
 type RootStackParamList = {
-  'Pokemon List': undefined;
-  'Pokemon Item': { id: string };
+  "Pokemon List": undefined;
+  "Pokemon Item": { id: string };
 };
 
-export type PokemonListScreenProps = NativeStackScreenProps<RootStackParamList, 'Pokemon List'>;
+export type PokemonListScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "Pokemon List"
+>;
 export type PokemonItemScreenNavigationProps = NativeStackNavigationProp<
   RootStackParamList,
-  'Pokemon Item'
+  "Pokemon Item"
 >;
 
 const HomeNavigator = () => {

@@ -1,26 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import { Layout, Text } from '@ui-kitten/components';
-import { PokeAPI } from 'pokeapi-types';
-import { Image, StyleSheet, View } from 'react-native';
+import { Layout, Text } from "@ui-kitten/components";
+import { PokeAPI } from "pokeapi-types";
+import { Image, StyleSheet, View } from "react-native";
 
-import { extractPokemonGenera, getPokemonImage } from '@/utils/pokemon';
-import { toCapitalize } from '@/utils/strings';
+import { extractPokemonGenera, getPokemonImage } from "@/utils/pokemon";
+import { toCapitalize } from "@/utils/strings";
 
-import { getPokemon, getPokemonSpecies } from '@/api/pokemon';
-import { PokemonItemScreenProps } from '@/navigation/types';
+import { getPokemon, getPokemonSpecies } from "@/api/pokemon";
+import { PokemonItemScreenProps } from "@/navigation/types";
 
 const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
   // State
-  const [pokemon, setPokemon] = useState<PokeAPI.Pokemon | undefined>(undefined);
-  const [generaName, setGeneraName] = useState('');
-  const [color, setColor] = useState<string | undefined>('');
+  const [pokemon, setPokemon] = useState<PokeAPI.Pokemon | undefined>(
+    undefined,
+  );
+  const [generaName, setGeneraName] = useState("");
+  const [color, setColor] = useState<string | undefined>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Navigation
   const { id } = route.params;
 
-  const pokemonImageUrl = getPokemonImage(id, 'other-home-front_default');
+  const pokemonImageUrl = getPokemonImage(id, "other-home-front_default");
 
   useEffect(() => {
     const fetchPokemon = async () => {
@@ -34,7 +36,7 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
         setIsLoading(false);
       } catch (error) {
         setPokemon(undefined);
-        console.error('error', error);
+        console.error("error", error);
       }
     };
 
@@ -51,9 +53,10 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
       <View style={styles.header}>
         <View
           style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Image
             source={{
               uri: pokemonImageUrl,
@@ -72,7 +75,10 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
         {/* Info */}
         <View style={styles.pokemonInfoContainer}>
           <View style={styles.pokemonInfo}>
-            <Text category="h4" style={[styles.text, styles.pokemonInfoValue, { color }]}>
+            <Text
+              category="h4"
+              style={[styles.text, styles.pokemonInfoValue, { color }]}
+            >
               {generaName}
             </Text>
 
@@ -89,8 +95,12 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
                 borderLeftWidth: 1,
                 borderRightWidth: 1,
               },
-            ]}>
-            <Text category="h4" style={[styles.text, styles.pokemonInfoValue, { color }]}>
+            ]}
+          >
+            <Text
+              category="h4"
+              style={[styles.text, styles.pokemonInfoValue, { color }]}
+            >
               {pokemon?.height}
             </Text>
 
@@ -100,7 +110,10 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
           </View>
 
           <View style={styles.pokemonInfo}>
-            <Text category="h4" style={[styles.text, styles.pokemonInfoValue, { color }]}>
+            <Text
+              category="h4"
+              style={[styles.text, styles.pokemonInfoValue, { color }]}
+            >
               {pokemon?.weight}
             </Text>
 
@@ -112,14 +125,20 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
 
         {/* Evolution */}
         <View style={styles.pokemonEvolutionContainer}>
-          <Text category="h3" style={[styles.text, { color, marginBottom: 12 }]}>
+          <Text
+            category="h3"
+            style={[styles.text, { color, marginBottom: 12 }]}
+          >
             Evolution
           </Text>
         </View>
 
         {/* Stats */}
         <View>
-          <Text category="h3" style={[styles.text, { color, marginBottom: 12 }]}>
+          <Text
+            category="h3"
+            style={[styles.text, { color, marginBottom: 12 }]}
+          >
             Base Stats
           </Text>
         </View>
@@ -150,10 +169,10 @@ const styles = StyleSheet.create({
   // Info
   pokemonInfo: { flexGrow: 1 },
   pokemonInfoContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 24,
   },
-  pokemonInfoValue: { fontWeight: 'bold' },
+  pokemonInfoValue: { fontWeight: "bold" },
 
-  text: { textAlign: 'center' },
+  text: { textAlign: "center" },
 });
