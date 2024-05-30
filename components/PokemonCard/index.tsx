@@ -4,15 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import { PokeAPI } from 'pokeapi-types';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-// API
-import { getPokemon } from 'api/pokemon';
+import { PokemonItemScreenNavigationProps } from '@/navigation';
 
-// Navigation
-import { PokemonItemScreenNavigationProps } from 'navigation';
+import { extractIdFromUrl, getPokemonImage } from '@/utils/pokemon';
+import { toCapitalize } from '@/utils/strings';
 
-// Utils
-import { extractIdFromUrl, getPokemonImage } from 'utils/pokemon';
-import { toCapitalize } from 'utils/strings';
+import { getPokemon } from '@/api/pokemon';
 
 type Props = { pokemon: PokeAPI.NamedAPIResource };
 
@@ -30,6 +27,7 @@ function PokemonCard({ pokemon }: Props) {
     const fetchPokemon = async () => {
       try {
         const data = await getPokemon(pokemon.name);
+
         setPokemonData(data);
       } catch (error) {
         setPokemonData(undefined);

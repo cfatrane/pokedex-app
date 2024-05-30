@@ -2,7 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "esModuleInterop": true,
     "jsx": "react-native",
     "lib": ["esnext", "dom"],
@@ -12,16 +12,9 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "types": ["react-native"]
-  },
-  "baseUrl": ".",
-  "paths": {
-    "api/*": ["./api/*"],
-    "assets/*": ["./assets/*"],
-    "components/*": ["./components/*"],
-    "constants/*": ["./constants/*"],
-    "screens/*": ["./screens/*"],
-    "type/*": ["./type/*"],
-    "utils/*": ["./utils/*"]
+    "types": ["react-native"],
+    "paths": {
+      "@/*": ["./*"]
+    }
   }
 }

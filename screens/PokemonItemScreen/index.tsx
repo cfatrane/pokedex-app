@@ -4,19 +4,18 @@ import { Layout, Text } from '@ui-kitten/components';
 import { PokeAPI } from 'pokeapi-types';
 import { Image, StyleSheet, View } from 'react-native';
 
-// API
-import { PokemonItemScreenProps } from 'navigation/types';
+import { extractPokemonGenera, getPokemonImage } from '@/utils/pokemon';
+import { toCapitalize } from '@/utils/strings';
 
-import { getPokemon, getPokemonSpecies } from 'api/pokemon';
-
-// Utils
-import { getPokemonImage } from 'utils/pokemon';
-import { toCapitalize } from 'utils/strings';
+import { getPokemon, getPokemonSpecies } from '@/api/pokemon';
+import { PokemonItemScreenProps } from '@/navigation/types';
 
 const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
   // State
   const [pokemon, setPokemon] = useState<PokeAPI.Pokemon | undefined>(undefined);
-  const [color, setColor] = useState('');
+  const [generaName, setGeneraName] = useState('');
+  const [color, setColor] = useState<string | undefined>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Navigation
   const { id } = route.params;
@@ -27,11 +26,12 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
     const fetchPokemon = async () => {
       try {
         const pokemonData = await getPokemon(id);
-        setPokemon(pokemonData);
-
         const pokemonSpecies = await getPokemonSpecies(id);
 
-        setColor(pokemonSpecies.color.name);
+        setPokemon(pokemonData);
+        setGeneraName(extractPokemonGenera(pokemonSpecies));
+        setColor(pokemonSpecies?.color.name);
+        setIsLoading(false);
       } catch (error) {
         setPokemon(undefined);
         console.error('error', error);
@@ -39,9 +39,9 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
     };
 
     fetchPokemon();
-  }, []);
+  }, [id]);
 
-  if (pokemon === null) {
+  if (!pokemon || isLoading) {
     return null;
   }
 
@@ -58,7 +58,7 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
             source={{
               uri: pokemonImageUrl,
             }}
-            style={{ width: 250, height: 250 }}
+            style={{ height: 250, width: 250 }}
           />
         </View>
 
@@ -72,8 +72,12 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
         {/* Info */}
         <View style={styles.pokemonInfoContainer}>
           <View style={styles.pokemonInfo}>
+            <Text category="h4" style={[styles.text, styles.pokemonInfoValue, { color }]}>
+              {generaName}
+            </Text>
+
             <Text category="label" style={styles.text}>
-              Species
+              Types
             </Text>
           </View>
 
@@ -132,24 +136,24 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    paddingHorizontal: 16,
     marginBottom: 24,
+    paddingHorizontal: 16,
   },
 
   main: {
     paddingHorizontal: 16,
   },
 
+  // Evoltuon
+  pokemonEvolutionContainer: {},
+
   // Info
+  pokemonInfo: { flexGrow: 1 },
   pokemonInfoContainer: {
     flexDirection: 'row',
     marginBottom: 24,
   },
-  pokemonInfo: { flexGrow: 1 },
   pokemonInfoValue: { fontWeight: 'bold' },
-
-  // Evoltuon
-  pokemonEvolutionContainer: {},
 
   text: { textAlign: 'center' },
 });

@@ -3,8 +3,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import PokemonItemScreen from 'screens/PokemonItemScreen';
-import PokemonListScreen from 'screens/PokemonListScreen';
+import PokemonItemScreen from '@/screens/PokemonItemScreen';
+import PokemonListScreen from '@/screens/PokemonListScreen';
 
 import type {
   NativeStackScreenProps,

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { Layout } from '@ui-kitten/components';
+import PokemonCard from 'components/PokemonCard';
 import { PokeAPI } from 'pokeapi-types';
 import { FlatList, StyleSheet } from 'react-native';
 
 import { getAllPokemon } from 'api/pokemon';
-
-import PokemonCard from 'components/PokemonCard';
 
 const LIMIT = 10;
 
@@ -16,7 +15,7 @@ const PokemonListScreen = () => {
 
   const fetchAllPokemon = async () => {
     try {
-      const data = await getAllPokemon({ offset, limit: LIMIT });
+      const data = await getAllPokemon({ limit: LIMIT, offset });
 
       if (data && data.results.length > 0) {
         setPokemonList([...pokemonList, ...data.results]);

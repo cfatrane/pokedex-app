@@ -10,6 +10,20 @@ export const extractIdFromUrl = (url = '') => {
   return id;
 };
 
+export const extractPokemonGenera = (pokemonSpecies, lang = 'en') => {
+  const { genera } = pokemonSpecies;
+
+  const generaName = genera.find((elem) => elem.language.name === lang).genus.split(' ')[0];
+
+  return generaName;
+};
+
+export const extractPokemonTypes = (pokemon) => {
+  const typesNames = pokemon?.types.map((type) => type.type.name);
+
+  return typesNames;
+};
+
 export const getPokemonImage = (id: string, value = 'front_default') => {
   let imageIrl = '';
 
