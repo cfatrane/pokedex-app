@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-import { Layout, Text } from "@ui-kitten/components";
+import { useLocalSearchParams } from "expo-router";
 import { PokeAPI } from "pokeapi-types";
 import { Image, StyleSheet, View } from "react-native";
+import { Paragraph, SizableText, Text, XStack, YStack } from "tamagui";
 
 import { extractPokemonGenera, getPokemonImage } from "@/utils/pokemon";
 import { toCapitalize } from "@/utils/strings";
 
 import { getPokemon, getPokemonSpecies } from "@/api/pokemon";
-import { PokemonItemScreenProps } from "@/navigation/types";
 
-const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
+const PokemonItemScreen = ({ route }: { route: any }) => {
   // State
   const [pokemon, setPokemon] = useState<PokeAPI.Pokemon | undefined>(
     undefined,
@@ -20,7 +20,8 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Navigation
-  const { id } = route.params;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  // const { id } = route.params;
 
   const pokemonImageUrl = getPokemonImage(id, "other-home-front_default");
 
@@ -48,7 +49,7 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
   }
 
   return (
-    <Layout style={styles.container}>
+    <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <View
@@ -143,7 +144,7 @@ const PokemonItemScreen = ({ navigation, route }: PokemonItemScreenProps) => {
           </Text>
         </View>
       </View>
-    </Layout>
+    </View>
   );
 };
 

@@ -1,22 +1,14 @@
+// https://docs.expo.dev/guides/using-eslint/
 module.exports = {
-  env: {
-    "react-native/react-native": true,
-  },
   extends: [
-    "universe/native",
-    // "eslint:recommended",
-    // "plugin:react-hooks/recommended",
-    // "plugin:import/recommended",
-    // "plugin:import/typescript",
+    "expo",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    // "plugin:react-native/recommended",
     "plugin:prettier/recommended",
   ],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-  plugins: ["react", "react-native", "no-relative-import-paths"],
+  plugins: ["react", "react-native", "prettier"],
   rules: {
     // C
     camelcase: "warn",
@@ -98,7 +90,7 @@ module.exports = {
           },
         ],
         distinctGroup: true,
-        pathGroupsExcludedImportTypes: ["react"],
+        pathGroupsExcludedImportTypes: ["react", "react-native", "expo"],
         alphabetize: {
           order:
             "asc" /* sort in ascending order. Options: ['ignore', 'asc', 'desc'] */,
@@ -108,10 +100,10 @@ module.exports = {
     ],
     // N
     "no-console": ["warn", { allow: ["error"] }],
-    "no-relative-import-paths/no-relative-import-paths": [
-      "warn",
-      { allowSameFolder: true, rootDir: "./" },
-    ],
+    // "no-relative-import-paths/no-relative-import-paths": [
+    //   "warn",
+    //   { allowSameFolder: true, rootDir: "./" },
+    // ],
     // P
     "padding-line-between-statements": [
       "error",
@@ -137,21 +129,23 @@ module.exports = {
     // R
     "require-await": "error",
     // S
-    "sort-keys": ["warn", "asc"],
+    // "sort-keys": ["warn", "asc"],
     "sort-vars": "error",
-    "sort-imports": ["off"],
+    // "sort-imports": ["off"],
 
     // React
     "react/jsx-newline": 1,
     "react/jsx-no-useless-fragment": [2, { allowExpressions: true }],
     "react/jsx-sort-props": [1, { ignoreCase: true }],
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
 
     // React Native
-    "react-native/no-unused-styles": 2,
-    "react-native/split-platform-components": 2,
+    // "react-native/no-unused-styles": 2,
+    // "react-native/split-platform-components": 2,
     // "react-native/no-inline-styles": 2,
     // "react-native/no-color-literals": 2,
-    "react-native/no-raw-text": 2,
-    "react-native/no-single-element-style-arrays": 2,
+    // "react-native/no-raw-text": 2,
+    // "react-native/no-single-element-style-arrays": 2,
   },
 };
