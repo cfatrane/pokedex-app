@@ -1,3 +1,5 @@
+import { PokeAPI } from "pokeapi-types";
+
 const SPRITES_BASE_URL =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
 
@@ -20,7 +22,15 @@ export const extractPokemonGenera = (pokemonSpecies, lang = "en") => {
   return generaName;
 };
 
-export const extractPokemonTypes = (pokemon) => {
+export const extractPokemonStats = (pokemonStats: PokeAPI.PokemonStat[]) => {
+  return pokemonStats.map((statItem) => ({
+    base_stat: statItem.base_stat,
+    effort: statItem.effort,
+    stat_name: statItem.stat.name,
+  })) as any;
+};
+
+export const extractPokemonTypes = (pokemon: PokeAPI.Pokemon) => {
   const typesNames = pokemon?.types.map((type) => type.type.name);
 
   return typesNames;

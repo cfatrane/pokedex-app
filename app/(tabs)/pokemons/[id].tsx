@@ -2,13 +2,41 @@ import { useEffect, useState } from "react";
 
 import { useLocalSearchParams } from "expo-router";
 import { PokeAPI } from "pokeapi-types";
-import { Image, StyleSheet, View } from "react-native";
-import { Paragraph, SizableText, Text, XStack, YStack } from "tamagui";
+import { Image, StyleSheet } from "react-native";
+import { SizableText, Text, View } from "tamagui";
 
-import { extractPokemonGenera, getPokemonImage } from "@/utils/pokemon";
-import { toCapitalize } from "@/utils/strings";
+import {
+  extractPokemonGenera,
+  extractPokemonStats,
+  getPokemonImage,
+} from "@/utils/pokemon";
+import { consoleLogStringsToJson, toCapitalize } from "@/utils/strings";
 
 import { getPokemon, getPokemonSpecies } from "@/api/pokemon";
+
+function Title({ color, data, label }) {
+  return (
+    <View
+      style={[
+        styles.pokemonInfo,
+        // {
+        //   borderColor: color,
+        //   borderLeftWidth: 1,
+        //   borderRightWidth: 1,
+        // },
+      ]}
+    >
+      <SizableText
+        size="$8"
+        style={[styles.text, styles.pokemonInfoValue, { color }]}
+      >
+        {data}
+      </SizableText>
+
+      <SizableText style={styles.text}>{label}</SizableText>
+    </View>
+  );
+}
 
 const PokemonItemScreen = ({ route }: { route: any }) => {
   // State
@@ -16,37 +44,42 @@ const PokemonItemScreen = ({ route }: { route: any }) => {
     undefined,
   );
   const [generaName, setGeneraName] = useState("");
+  const [stats, setStats] = useState([]);
   const [color, setColor] = useState<string | undefined>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Navigation
   const { id } = useLocalSearchParams<{ id: string }>();
-  // const { id } = route.params;
 
   const pokemonImageUrl = getPokemonImage(id, "other-home-front_default");
 
+  const fetchPokemon = async (id: string) => {
+    try {
+      const pokemonData = await getPokemon(id);
+      const pokemonSpecies = await getPokemonSpecies(id);
+
+      setPokemon(pokemonData);
+      setGeneraName(extractPokemonGenera(pokemonSpecies));
+      setStats(extractPokemonStats(pokemon?.stats || []));
+      setColor(pokemonSpecies?.color.name);
+      setIsLoading(false);
+    } catch (error) {
+      setPokemon(undefined);
+      console.error("error", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPokemon = async () => {
-      try {
-        const pokemonData = await getPokemon(id);
-        const pokemonSpecies = await getPokemonSpecies(id);
-
-        setPokemon(pokemonData);
-        setGeneraName(extractPokemonGenera(pokemonSpecies));
-        setColor(pokemonSpecies?.color.name);
-        setIsLoading(false);
-      } catch (error) {
-        setPokemon(undefined);
-        console.error("error", error);
-      }
-    };
-
-    fetchPokemon();
+    if (id) {
+      fetchPokemon(id);
+    }
   }, [id]);
 
   if (!pokemon || isLoading) {
     return null;
   }
+
+  consoleLogStringsToJson(stats);
 
   return (
     <View style={styles.container}>
@@ -66,82 +99,48 @@ const PokemonItemScreen = ({ route }: { route: any }) => {
           />
         </View>
 
-        <Text category="h1" style={styles.text}>
+        <SizableText size="$10" style={styles.text}>
           {toCapitalize(pokemon.name)}
-        </Text>
+        </SizableText>
       </View>
 
       {/* Main */}
       <View style={styles.main}>
         {/* Info */}
         <View style={styles.pokemonInfoContainer}>
-          <View style={styles.pokemonInfo}>
-            <Text
-              category="h4"
-              style={[styles.text, styles.pokemonInfoValue, { color }]}
-            >
-              {generaName}
-            </Text>
+          <Title color={color} data={generaName} label="Types" />
 
-            <Text category="label" style={styles.text}>
-              Types
-            </Text>
-          </View>
+          <Title color={color} data={pokemon?.height} label="Height" />
 
-          <View
-            style={[
-              styles.pokemonInfo,
-              {
-                borderColor: color,
-                borderLeftWidth: 1,
-                borderRightWidth: 1,
-              },
-            ]}
-          >
-            <Text
-              category="h4"
-              style={[styles.text, styles.pokemonInfoValue, { color }]}
-            >
-              {pokemon?.height}
-            </Text>
-
-            <Text category="label" style={styles.text}>
-              Height
-            </Text>
-          </View>
-
-          <View style={styles.pokemonInfo}>
-            <Text
-              category="h4"
-              style={[styles.text, styles.pokemonInfoValue, { color }]}
-            >
-              {pokemon?.weight}
-            </Text>
-
-            <Text category="label" style={styles.text}>
-              Weight
-            </Text>
-          </View>
+          <Title color={color} data={pokemon?.weight} label="Weight" />
         </View>
 
         {/* Evolution */}
         <View style={styles.pokemonEvolutionContainer}>
-          <Text
-            category="h3"
+          <SizableText
+            size="$6"
             style={[styles.text, { color, marginBottom: 12 }]}
           >
             Evolution
-          </Text>
+          </SizableText>
         </View>
 
         {/* Stats */}
         <View>
-          <Text
-            category="h3"
+          <SizableText
+            size="$6"
             style={[styles.text, { color, marginBottom: 12 }]}
           >
             Base Stats
-          </Text>
+          </SizableText>
+
+          {stats.map((stat, index) => (
+            <View key={index}>
+              <Text>{stat.stat_name}</Text>
+
+              <Text>{stat.base_stat}</Text>
+            </View>
+          ))}
         </View>
       </View>
     </View>
@@ -164,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 
-  // Evoltuon
+  // Evolution
   pokemonEvolutionContainer: {},
 
   // Info
